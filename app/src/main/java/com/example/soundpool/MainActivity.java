@@ -7,6 +7,8 @@ import android.media.Image;
 import android.media.SoundPool;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -16,6 +18,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 public class MainActivity extends AppCompatActivity {
     SoundPool soundPool;
     int sonAzul;
@@ -23,7 +29,11 @@ public class MainActivity extends AppCompatActivity {
     int sonRojo;
     int sonAmarillo;
     int sonError;
+
+    int numCOLORS=4;
     View.OnClickListener listener;
+    Handler handler;
+    ArrayList<ColorAudio> colorAudioAlAzar;
 
     ImageView azulm, rojo, verde, amarillo, play;
     @Override
@@ -38,7 +48,30 @@ public class MainActivity extends AppCompatActivity {
         createSoundPool();
         initAudios();
         listenerInitialize();
-
+        setListeners();
+        //0 a 10 y por cada uno de ellos le doy un add, reproducir la lista
+        colorAudioAlAzar = new ArrayList<>();
+        for (int i = 0; i<10; i++){
+            colorAudioAlAzar.add(getRandomColor());
+            //
+        }
+    }
+    //methods
+    private ColorAudio getRandomColor() {
+        ColorAudio colorAudio;
+        //generamos un numero al azar
+        int rnd = new Random().nextInt(numCOLORS);
+        if(rnd == 0) {
+            //le pasaremos el color y suene el azul
+            colorAudio = new ColorAudio(sonAzul, SimonColor.BLUE);
+        }else if(rnd == 1) {
+            colorAudio = new ColorAudio(sonRojo,SimonColor.RED);
+        }else if(rnd == 2) {
+            colorAudio = new ColorAudio(sonAmarillo,SimonColor.YELLOW);
+        }else{
+            colorAudio = new ColorAudio(sonVerde,SimonColor.GREEN);
+        }
+        return colorAudio;
     }
     //viewonClickListener
     private void initAudios() {
@@ -53,27 +86,32 @@ public class MainActivity extends AppCompatActivity {
         verde = findViewById(R.id.ibVerde);
         play = findViewById(R.id.ibPlay);
     }
+    private void setListeners(){
+        azulm.setOnClickListener(listener);
+        rojo.setOnClickListener(listener);
+        amarillo.setOnClickListener(listener);
+        verde.setOnClickListener(listener);
+        play.setOnClickListener(listener);
+    }
     private void listenerInitialize() {
         listener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(view.getId() == R.id.ibAzul){
+                    azul();
 
                 }else if(view.getId() == R.id.ibRojo){
-
+                    soundPool.play(sonRojo,1,1,1,0,0);
                 }else if(view.getId() == R.id.ibAmarillo){
-
+                    soundPool.play(sonAmarillo,1,1,1,0,0);
                 }else if(view.getId() == R.id.ibVerde){
-
+                    soundPool.play(sonVerde,1,1,1,0,0);
                 }else if(view.getId() == R.id.ibPlay){
-
+                    soundPool.play(R.raw.intro,1,1,1,0,0);
                 }
             }
         };
     }
-
-
-
 
     /**
      * How to use SoundPool on all API levels
@@ -116,4 +154,23 @@ public class MainActivity extends AppCompatActivity {
         //podemos hacer que varias canciones suene a la vez
 
     //}
+
+    public void azul() {
+        azulm.setImageResource(R.drawable.blueimglight);
+        
+            //sp.play(soundID, leftVolume, rightVolume, priority, loop, rate);
+            soundPool.play(sonAzul, 1, 1, 0, 0, 1);
+        try {
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    azulm.setImageResource(R.drawable.blueimg);
+                }
+            },500);
+        } catch (Exception e) {
+            Log.i("Error azul()",e.toString());
+        }
+    }
+
 }
