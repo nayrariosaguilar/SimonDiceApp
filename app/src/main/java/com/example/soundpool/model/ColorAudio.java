@@ -1,6 +1,4 @@
-package com.example.soundpool;
-
-import java.util.Random;
+package com.example.soundpool.model;
 
 public class ColorAudio {
     SimonColor colorSimon;
@@ -11,5 +9,11 @@ public class ColorAudio {
         this.colorSimon = colorSimon;
     }
 
+    public int getIdAudio() {
+        return idAudio;
+    }
 
+    public SimonColor getColorSimon() {
+        return colorSimon;
+    }
 }

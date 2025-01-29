@@ -1,4 +1,4 @@
-package com.example.soundpool;
+package com.example.soundpool.model;
 
 public enum SimonColor {
     BLUE,RED,GREEN,YELLOW
